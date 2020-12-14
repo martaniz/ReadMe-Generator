@@ -75,7 +75,7 @@ const questions = [
     {
         type: 'confirm',
         name: 'confirmScreenshot',
-        message: 'Would you like to include screenshots in your Usage section?',
+        message: 'Include screenshots in your Usage section? (If yes, you will be prompted for more info later.)',
         default: true
     },
     { 
@@ -99,7 +99,7 @@ const questions = [
     {
         type: 'confirm',
         name: 'confirmContributing',
-        message: 'Would you like to include a Contributions section?',
+        message: 'Would you like to include a Contributing section?',
         default: true
     },
     {
@@ -149,10 +149,16 @@ const questions = [
                 return false;
             }
         }
+    },
+    {
+        type: 'confirm',
+        name: 'confirmCredits',
+        message: 'Would you like to include a Credits section?',
+        default: true
     }
 ];
 
-addScreenshots = (readmeData) => {
+addScreenshots = readmeData => {
     
     if (!readmeData.screenshots) {
         readmeData.screenshots = [];
@@ -190,6 +196,11 @@ Add New Screenshot
             }
         },
         {
+            type: 'input',
+            name: 'screenshotDesc',
+            message: 'Please provide a description of your screenshot.'
+        },
+        {
             type: 'confirm',
             name: 'confirmAddScreenshot',
             message: 'Would you like to add another screenshot?',
@@ -207,6 +218,63 @@ Add New Screenshot
     });
 };
 
+addCredits = readmeInfo => {
+    
+    if (!readmeInfo.credits) {
+        readmeInfo.credits = [];
+    }
+
+    console.log(`
+==============
+Add New Credit
+==============
+    `);
+
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'creditName',
+            message: 'Please enter the name for the credit. (Required)',
+            validate: creditName => {
+                if (creditName) {
+                    return true;
+                } else {
+                    console.log('Please enter a name for the credit!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'creditLink',
+            message: 'Please enter a link for the credit.  (Required)',
+            validate: creditLink => {
+                if (creditLink) {
+                    return true;
+                } else {
+                    console.log('Please enter a link for the credit!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddCredit',
+            message: 'Would you like to add another credit?',
+            default: false
+        }
+    ])
+    .then(creditData => {
+        readmeInfo.credits.push(creditData);
+
+        if (creditData.confirmAddCredit) {
+            return addCredit(readmeInfo);
+        } else {
+            return readmeInfo;
+        }
+    })
+}
+
 // function to write README file
 function writeToFile(fileName, data) {
 }
@@ -220,11 +288,14 @@ function init() {
 init()
     .then(userResponse => { 
         if (userResponse.confirmScreenshot) {
-        addScreenshots(userResponse);
+            addScreenshots(userResponse);
         }
     })
-    .then(allData => {
-        console.log(allData)
+    .then(response => {
+        console.log(response)
+        // if (response.confirmCredits) {
+        //     addCredits(response);
+        // }
     })
     .catch(err => {
         console.log(err);
