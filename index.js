@@ -18,12 +18,25 @@ const questions = [
     {
         type: 'input',
         name: 'description',
-        message: 'Provide a description of your repo.  (Required)',
+        message: 'Provide a description of your application.  (Required)',
         validate: descInput => {
             if (descInput) {
                 return true;
             } else {
                 console.log('Please enter a description!');
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'link',
+        message: 'Please provide a link to your deployed application.  (Required)',
+        validate: linkInput => {
+            if (linkInput) {
+                return true;
+            } else {
+                console.log('Please provide a link!');
                 return false;
             }
         }
@@ -47,22 +60,23 @@ const questions = [
         }
     },
     {
-        type: 'confirm',
-        name: 'confirmUsage',
-        message: 'Would you like to include a Usage section?',
-        default: true
-    },
-    {
         type: 'input',
         name: 'usage',
-        message: 'Please provide usage information.',
-        when: ({ confirmUsage }) => {
-            if (confirmUsage) {
+        message: 'Please provide information for using your application.  (Required)',
+        validate: usageInput => {
+            if (usageInput) {
                 return true;
             } else {
+                console.log('Please include usage information!');
                 return false;
             }
         }
+    },
+    {
+        type: 'confirm',
+        name: 'confirmScreenshot',
+        message: 'Would you like to include screenshots in your Usage section?',
+        default: true
     },
     { 
         type: 'confirm',
@@ -138,6 +152,61 @@ const questions = [
     }
 ];
 
+addScreenshots = (readmeData) => {
+    
+    if (!readmeData.screenshots) {
+        readmeData.screenshots = [];
+    }
+
+    console.log(`
+==================
+Add New Screenshot
+==================
+    `);
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'screenshotLink',
+            message: 'Please provide a link for your screenshot. (Required)',
+            validate: screenshotLinkInput => {
+                if (screenshotLinkInput) {
+                    return true;
+                } else {
+                    console.log('Please provide a link for your screenshot!')
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'screenshotAlt',
+            message: 'Please provide alt text for your screenshot. (Required)',
+            validate: screenshotAltInput => {
+                if (screenshotAltInput) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddScreenshot',
+            message: 'Would you like to add another screenshot?',
+            default: false
+        }
+    ])
+    .then(screenshotData => {
+        readmeData.screenshots.push(screenshotData);
+
+        if (screenshotData.confirmAddScreenshot) {
+            return addScreenshots(readmeData);
+        } else {
+            return readmeData;
+        };
+    });
+};
+
 // function to write README file
 function writeToFile(fileName, data) {
 }
@@ -148,7 +217,18 @@ function init() {
 }
 
 // function call to initialize program
-init().then(data => console.log(data));
+init()
+    .then(userResponse => { 
+        if (userResponse.confirmScreenshot) {
+        addScreenshots(userResponse);
+        }
+    })
+    .then(allData => {
+        console.log(allData)
+    })
+    .catch(err => {
+        console.log(err);
+    });
 
 // Write a conditional for filling out Table of Contents (after description)!!
  
