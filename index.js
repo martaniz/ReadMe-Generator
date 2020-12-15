@@ -1,4 +1,5 @@
-const inquirer = require("inquirer");
+const inquirer = require('inquirer');
+const fs = require('fs');
 
 // array of questions for user
 const questions = [
@@ -213,6 +214,7 @@ Add New Screenshot
         if (screenshotData.confirmAddScreenshot) {
             return addScreenshots(readmeData);
         } else {
+            // console.log(readmeData)
             return readmeData;
         };
     });
@@ -268,7 +270,7 @@ Add New Credit
         readmeInfo.credits.push(creditData);
 
         if (creditData.confirmAddCredit) {
-            return addCredit(readmeInfo);
+            return addCredits(readmeInfo);
         } else {
             return readmeInfo;
         }
@@ -288,15 +290,19 @@ function init() {
 init()
     .then(userResponse => { 
         if (userResponse.confirmScreenshot) {
-            addScreenshots(userResponse);
+            return addScreenshots(userResponse);
+        } else {
+            return userResponse;
         }
     })
     .then(response => {
-        console.log(response)
-        // if (response.confirmCredits) {
-        //     addCredits(response);
-        // }
+        if (response.confirmCredits) {
+            return addCredits(response);
+        } else {
+            return response;
+        }
     })
+    .then(data => writeToFile('README.md', data))
     .catch(err => {
         console.log(err);
     });
