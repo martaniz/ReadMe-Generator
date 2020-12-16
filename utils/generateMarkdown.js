@@ -2,12 +2,10 @@
 populateContents = contentsArr => {
 
     let contentsList = ''
-
     contentsArr.forEach(item => {
         contentsList += `* [${item}](#${item.toLowerCase().split(' ').join('-')})
 `
     })
-
     return contentsList;
 }
 
@@ -15,13 +13,15 @@ populateContents = contentsArr => {
 // function to generate markdown for README
 function generateMarkdown(data) {
 
+    const { title, description, contents, screenshots, credits, ...section } = data;
+
     return `# ${data.title}
 
 ## Description
-${data.description}
+${description}
 
 ## Contents
-${populateContents(data.contents)}
+${populateContents(contents)}
 
 
 `;

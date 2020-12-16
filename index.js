@@ -39,7 +39,7 @@ const questions = [
     {
         type: 'input',
         name: 'link',
-        message: 'Please provide a link to your deployed application.  (Required)',
+        message: 'Please provide a link to your deployed application.',
         when: ({ contents }) => {
             if (contents.indexOf('Deployed Application') > -1) {
                 return true;
@@ -66,6 +66,13 @@ const questions = [
             } else {
                 return false;
             }
+        },
+        validate: installInput => {
+            if (installInput) {
+                return true;
+            } else {
+                console.log('Please enter installation instructions!');
+                return false;
         }
     },
     {
@@ -76,6 +83,14 @@ const questions = [
             if (contents.indexOf('Usage') > -1 ) {
                 return true;
             } else {
+                return false;
+            }
+        },
+        validate: usageInput => {
+            if (usageInput) {
+                return true;
+            } else {
+                console.log('Please provide information for using your application!');
                 return false;
             }
         }
@@ -90,6 +105,14 @@ const questions = [
             } else {
                 return false;
             }
+        },
+        validate: licenseInput => {
+            if (licenseInput) {
+                return true;
+            } else {
+                console.log('Please provide license information!');
+                return false;
+            }
         }
     }, 
     {
@@ -102,16 +125,52 @@ const questions = [
             } else {
                 return false;
             }
+        },
+        validate: contributingInput => {
+            if (contributingInput) {
+                return true;
+            } else {
+                console.log('Please enter guidelines for contributing!');
+                return false;
+            }
         }
     },
     {
         type: 'input',
         name: 'tests',
-        message: 'Please enter tests for your application.',
+        message: 'Please enter test information for your application.',
         when: ({ contents }) => {
             if (contents.indexOf('Tests') > -1) {
                 return true;
             } else {
+                return false;
+            }
+        },
+        validate: testsInput => {
+            if (testsInput) {
+                return true;
+            } else {
+                console.log('Please enter test information for your application!');
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'questions',
+        message: 'Please provide an email address for others to reach you with questions.',
+        when: ({ contents }) => {
+            if (contents.indexOf('Questions') > -1) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        validate: questionsInput => {
+            if (questionsInput) {
+                return true;
+            } else {
+                console.log('Please provide an email address!');
                 return false;
             }
         }
@@ -126,16 +185,12 @@ const questions = [
             } else {
                 return false;
             }
-        }
-    },
-    {
-        type: 'input',
-        name: 'questions',
-        message: 'Please provide an email address for others to reach you with questions.',
-        when: ({ contents }) => {
-            if (contents.indexOf('Questions') > -1) {
+        },
+        validate: githubInput => {
+            if (githubInput) {
                 return true;
             } else {
+                console.log('Please enter your GitHub username!');
                 return false;
             }
         }
