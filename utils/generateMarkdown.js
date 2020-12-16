@@ -9,12 +9,33 @@ capFirstLetters = string => {
 // creates table of contents
 createTableOfContents = contentsArr => {
 
-    let contentsList = ''
+    let contentsList = '';
     contentsArr.forEach(item => {
         contentsList += `* [${item}](#${item.toLowerCase().split(' ').join('-')})
 `
     })
     return contentsList;
+}
+
+screenshotSection = screenshotItem => {
+    
+    let allScreenshots = '';
+    if (screenshotItem) {
+        screenshotItem.forEach(shot => {
+            allScreenshots += `![${shot.screenshotAlt}](${shot.screenshotLink})
+${shot.screenshotDesc}
+
+`
+        })
+
+    return `
+    
+### Screenshots
+        
+${allScreenshots}`;
+    } else {
+        return false;
+    }
 }
 
 populateContents = (title, section) => {
@@ -27,7 +48,7 @@ populateContents = (title, section) => {
         },
         {
             h2: 'Usage',
-            content: section.usage
+            content: section.usage + screenshotSection(section.screenshots)
         },
         {
             h2: 'License',

@@ -31,10 +31,23 @@ const questions = [
         }
     },
     {
+        type: 'input',
+        name: 'usage',
+        message: 'Please provide information for using your application. (Required)',
+        validate: usageInput => {
+            if (usageInput) {
+                return true;
+            } else {
+                console.log('Please provide information for using your application!');
+                return false;
+            }
+        }
+    },
+    {
         type: 'checkbox',
         name: 'contents',
         message: 'Which sections would you like to include in your README?',
-        choices: ['Deployed Application', 'Installation', 'Usage', 'Screenshots', 'License', 'Contributing', 'Tests', 'Questions', 'Credits']
+        choices: ['Deployed Application', 'Installation', 'Screenshots', 'License', 'Contributing', 'Tests', 'Questions', 'Credits']
     },
     {
         type: 'input',
@@ -72,26 +85,6 @@ const questions = [
                 return true;
             } else {
                 console.log('Please enter installation instructions!');
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'usage',
-        message: 'Please provide information for using your application.',
-        when: ({ contents }) => {
-            if (contents.indexOf('Usage') > -1 ) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        validate: usageInput => {
-            if (usageInput) {
-                return true;
-            } else {
-                console.log('Please provide information for using your application!');
                 return false;
             }
         }
