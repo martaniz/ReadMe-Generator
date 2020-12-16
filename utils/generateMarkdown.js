@@ -28,11 +28,25 @@ ${shot.screenshotDesc}
 `
         })
 
-    return `
+        return `
     
 ### Screenshots
-        
 ${allScreenshots}`;
+    } else {
+        return false;
+    }
+};
+
+creditsSection = creditItem => {
+
+    let allCredits = '';
+    if (creditItem) {
+        creditItem.forEach(credit => {
+            allCredits += `* [${credit.creditName}](${credit.creditLink})
+`
+        })
+        
+        return `${allCredits}`
     } else {
         return false;
     }
@@ -48,7 +62,7 @@ populateContents = (title, section) => {
         },
         {
             h2: 'Usage',
-            content: section.usage + screenshotSection(section.screenshots)
+            content: `${section.usage} ${screenshotSection(section.screenshots)}` // fix this
         },
         {
             h2: 'License',
@@ -78,6 +92,13 @@ populateContents = (title, section) => {
         })
     }
 
+    if (creditsSection(section.credits)) {
+        sectionArr.push ({
+            h2: 'Credits',
+            content: creditsSection(section.credits)
+        })
+    }
+
     sectionArr.forEach(sectionItem => {
         if (sectionItem.content) {
             readmeContents += `## ${sectionItem.h2}
@@ -102,7 +123,6 @@ ${description}
 
 ## Contents
 ${createTableOfContents(contents)}
-
 ${populateContents(title, section)}
 
 `;
