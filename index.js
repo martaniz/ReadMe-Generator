@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const generateMarkdown = require('./utils/generateMarkdown.js');
-const { rejects } = require('assert');
 
 // array of questions for user
 const questions = [
@@ -32,23 +31,30 @@ const questions = [
         }
     },
     {
+        type: 'checkbox',
+        name: 'contents',
+        message: 'Which sections would you like to include in your README?',
+        choices: ['Deployed Application', 'Installation', 'Usage', 'Screenshots', 'License', 'Contributing', 'Tests', 'Questions', 'Credits']
+    },
+    {
         type: 'input',
         name: 'link',
         message: 'Please provide a link to your deployed application.  (Required)',
+        when: ({ contents }) => {
+            if (contents.indexOf('Deployed Application') > -1) {
+                return true;
+            } else { 
+                return false;
+            }
+        },
         validate: linkInput => {
             if (linkInput) {
                 return true;
             } else {
-                console.log('Please provide a link!');
+                console.log('Please enter a link!');
                 return false;
             }
         }
-    },
-    {
-        type: 'checkbox',
-        name: 'contents',
-        message: 'Which sections would you like to include in your README?',
-        choices: ['Installation', 'Usage', 'Screenshots', 'License', 'Contributing', 'Tests', 'Questions', 'Credits']
     },
     {
         type: 'input',
@@ -65,7 +71,7 @@ const questions = [
     {
         type: 'input',
         name: 'usage',
-        message: 'Please provide information for using your application.  (Required)',
+        message: 'Please provide information for using your application.',
         when: ({ contents }) => {
             if (contents.indexOf('Usage') > -1 ) {
                 return true;
@@ -112,6 +118,18 @@ const questions = [
     },
     {
         type: 'input',
+        name: 'github',
+        message: 'Please enter your GitHub username for others to reach you with questions.',
+        when: ({ contents }) => {
+            if (contents.indexOf('Questions') > -1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
         name: 'questions',
         message: 'Please provide an email address for others to reach you with questions.',
         when: ({ contents }) => {
@@ -121,9 +139,10 @@ const questions = [
                 return false;
             }
         }
-    },
+    }
 ];
 
+// array of prompts for adding screenshots
 const screenshotQues = [
     {
         type: 'input',
@@ -163,6 +182,7 @@ const screenshotQues = [
     }
 ];
 
+// array of prompts for adding credits
 const creditQues = [
     {
         type: 'input',
@@ -190,8 +210,10 @@ const creditQues = [
     }
 ]
 
+// recursive function for adding screenshots
 addScreenshots = readmeData => {
     
+    // initiates screenshot array
     if (!readmeData.screenshots) {
         readmeData.screenshots = [];
     }
@@ -203,19 +225,23 @@ Add New Screenshot
     `);
     return inquirer.prompt(screenshotQues)
     .then(screenshotData => {
+
+        // adds the screenshot to the array
         readmeData.screenshots.push(screenshotData);
 
+        // will call addScreenshots again based on user input
         if (screenshotData.confirmAddScreenshot) {
             return addScreenshots(readmeData);
         } else {
-            // console.log(readmeData)
             return readmeData;
         };
     });
 };
 
+// recursive function for adding credits
 addCredits = readmeInfo => {
     
+    // initiates array for credits
     if (!readmeInfo.credits) {
         readmeInfo.credits = [];
     }
@@ -228,8 +254,11 @@ Add New Credit
 
     return inquirer.prompt(creditQues)
     .then(creditData => {
+
+        // adds credits to array
         readmeInfo.credits.push(creditData);
 
+        // will call addCredits again based on user input
         if (creditData.confirmAddCredit) {
             return addCredits(readmeInfo);
         } else {
@@ -242,14 +271,9 @@ Add New Credit
 function writeToFile(fileName, data) {
     fs.writeFile(`./dist/${fileName}`, data, err => {
         if (err) {
-            reject(err);
-            return;
-        }
-
-        resolve({
-            ok: true,
-            message: 'README created!'
-        })
+            throw err
+        };
+        console.log('README created!')
     })
 }
 
@@ -261,6 +285,7 @@ function init() {
 // function call to initialize program
 init()
     .then(userResponse => { 
+        // calls function to add screenshots based on user selection
         if (userResponse.contents.indexOf('Screenshots') > -1) {
             return addScreenshots(userResponse);
         } else {
@@ -268,20 +293,19 @@ init()
         }
     })
     .then(response => {
+        // calls function to add credits based on user selection
         if (response.contents.indexOf('Credits') > -1) {
             return addCredits(response);
         } else {
             return response;
         }
     })
-    .then(response => console.log(response))
-    // .then(answers => writeToFile('README.md', answers))
+    .then(answers => generateMarkdown(answers))
+    .then(generatedReadme => writeToFile('README.md', generatedReadme))
     .catch(err => {
         console.log(err);
     });
 
-// Write a conditional for filling out Table of Contents (after description)!!
- 
 // WHEN I enter a description, installation instructions, usage information, contribution guidelines, and test instructions
 // THEN this information is added to the sections of the README entitled Description, Installation, Usage, Contributing, and Tests
 // WHEN I choose a license for my application from a list of options
