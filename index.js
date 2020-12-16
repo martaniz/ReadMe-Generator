@@ -73,6 +73,7 @@ const questions = [
             } else {
                 console.log('Please enter installation instructions!');
                 return false;
+            }
         }
     },
     {
