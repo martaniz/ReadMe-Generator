@@ -68,21 +68,39 @@ ${shot.screenshotDesc}
 ### Screenshots
 ${allScreenshots}`;
     } else {
-        return "";
+        return '';
     }
 };
+
+// creates usage section
+createUsage = (usage, screenshots) => {
+    if (usage) {
+        return `${usage} ${createScreenshots(screenshots)}`
+    } else {
+        return '';
+    }
+}
 
 // creates license section
 createLicense = (license) => {
     if (license) {
         return `This application is licensed under the ${license} license.`;
     } else {
-        return "";
+        return '';
     }
 };
 
+// creates questions section
+createQuestions = (email, github, repo) => {
+    if (email) {
+        return `If you have any questions about the repo, please [open an issue](https://github.com/${github}/${repo}/issues) or contact me via ${email}. You can find more of my work on my GitHub, [${github}](https://github.com/${github}/).`
+    } else {
+        return '';
+    }
+}
+
 // creates credits section
-createCredits = (creditItem) => {
+createCredits = creditItem => {
     let allCredits = "";
     if (creditItem) {
         creditItem.forEach((credit) => {
@@ -101,40 +119,44 @@ function generateMarkdown(data) {
     let readmeContents = "";
     const sectionArr = [
         {
-        h2: "Description",
-        content: createDescription(data.title, data.description, data.link),
+            h2: "Description",
+            content: createDescription(data.title, data.description, data.link),
         },
         {
-        h2: "Contents",
-        content: createTableOfContents(data.contents),
+            h2: "Contents",
+            content: createTableOfContents(data.contents),
         },
         {
-        h2: "Installation",
-        content: data.installation,
+            h2: "Installation",
+            content: data.installation,
         },
         {
-        h2: "Usage",
-        content: `${data.usage} ${createScreenshots(data.screenshots)}`,
+            h2: "Usage",
+            content: createUsage(data.usage, data.screenshot)
         },
         {
-        h2: "License",
-        content: createLicense(data.license),
-        },
-        { h2: "Contributing", content: data.contributing },
-        {
-        h2: "Tests",
-        content: data.tests,
+            h2: "License",
+            content: createLicense(data.license),
         },
         {
-        h2: "Questions",
-        content: `If you have any questions about the repo, please open an issue or contact me via ${data.questions}. You can find more of my work on my [GitHub](https://github.com/${data.github}/).`,
+            h2: "Contributing", 
+            content: data.contributing 
         },
         {
-        h2: "Credits",
-        content: createCredits(data.credits),
+            h2: "Tests",
+            content: data.tests,
+        },
+        {
+            h2: "Questions",
+            content: createQuestions(data.questions, data.github, data.repo),
+        },
+        {
+            h2: "Credits",
+            content: createCredits(data.credits),
         },
     ];
 
+    // adds each README section if contents for the section exists
     sectionArr.forEach((sectionItem) => {
         if (sectionItem.content) {
         readmeContents += `## ${sectionItem.h2}
