@@ -19,6 +19,31 @@ const questions = [
     },
     {
         type: 'input',
+        name: 'github',
+        message: 'Please enter your GitHub username. (Required)',
+        validate: githubInput => {
+            if (githubInput) {
+                return true;
+            } else {
+                console.log('Please enter your GitHub username!');
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'repo',
+        message: 'Please enter the name of your repo.  (Required)',
+        validate: repoInput => {
+            if (repoInput) {
+                return true;
+            } else {
+                console.log('Please enter the name of your repo!')
+            }
+        }
+    },
+    {
+        type: 'input',
         name: 'description',
         message: 'Provide a description of your application.  (Required)',
         validate: descInput => {
@@ -47,7 +72,7 @@ const questions = [
         type: 'checkbox',
         name: 'contents',
         message: 'Which sections would you like to include in your README?',
-        choices: ['Deployed Application', 'Installation', 'Screenshots', 'License', 'Contributing', 'Tests', 'Credits']
+        choices: ['Deployed Application', 'Installation', 'Usage', 'Screenshots', 'License', 'Contributing', 'Tests', 'Questions', 'Credits']
     },
     {
         type: 'input',
@@ -155,24 +180,18 @@ const questions = [
         type: 'input',
         name: 'questions',
         message: 'Please provide an email address for others to reach you with questions. (Required)',
+        when: ({ contents }) => {
+            if (contents.indexOf('Questions') > -1) {
+                return true;
+            } else { 
+                return false;
+            }
+        },
         validate: questionsInput => {
             if (questionsInput) {
                 return true;
             } else {
                 console.log('Please provide an email address!');
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'github',
-        message: 'Please enter your GitHub username for others to reach you with questions. (Required)',
-        validate: githubInput => {
-            if (githubInput) {
-                return true;
-            } else {
-                console.log('Please enter your GitHub username!');
                 return false;
             }
         }
