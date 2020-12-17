@@ -4,7 +4,18 @@ capFirstLetters = string => {
     .split(' ')
     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
     .join(' ');
-}
+};
+
+// creates description section
+addDescription = (title, description, link) => {
+    if (link) {
+        return `${description}
+        
+View the deployed page at [${capFirstLetters(title)}](${link}).`
+    } else {
+        return `${description}`
+    }
+};
 
 // creates table of contents
 createTableOfContents = contentsArr => {
@@ -15,16 +26,16 @@ createTableOfContents = contentsArr => {
 `
     })
     return contentsList;
-}
+};
 
-screenshotSection = screenshotItem => {
+// creates screenshot section
+addScreenshot = screenshotItem => {
     
     let allScreenshots = '';
     if (screenshotItem) {
         screenshotItem.forEach(shot => {
             allScreenshots += `![${shot.screenshotAlt}](${shot.screenshotLink})
 ${shot.screenshotDesc}
-
 `
         })
 
@@ -33,11 +44,21 @@ ${shot.screenshotDesc}
 ### Screenshots
 ${allScreenshots}`;
     } else {
-        return false;
+        return '';
     }
 };
 
-creditsSection = creditItem => {
+// creates license section
+addLicense = license => {
+    if (license) {
+        return `This application is licensed under the ${license} license.`
+    } else {
+        return '';
+    }
+};
+
+// creates credits section
+addCredits = creditItem => {
 
     let allCredits = '';
     if (creditItem) {
@@ -48,56 +69,47 @@ creditsSection = creditItem => {
         
         return `${allCredits}`
     } else {
-        return false;
+        return '';
     }
-}
+};
 
-populateContents = (title, section) => {
-    
+// function to generate markdown for README
+function generateMarkdown(data) {
+
     let readmeContents = '';
     const sectionArr = [
         {
+            h2: 'Description',
+            content: addDescription(data.title, data.description, data.link)
+        },
+        {
             h2: 'Installation',
-            content: section.installation
+            content: data.installation
         },
         {
             h2: 'Usage',
-            content: `${section.usage} ${screenshotSection(section.screenshots)}` // fix this
+            content: `${data.usage} ${addScreenshot(data.screenshots)}`
         },
         {
             h2: 'License',
-            content: section.license
+            content: addLicense(data.license)
         },
         {   h2: 'Contributing',
-            content: section.contributing
+            content: data.contributing
         },
         {
             h2: 'Tests',
-            content: section.tests
+            content: data.tests
         },
-
-    ]
-
-    if (section.link) {
-        sectionArr.shift({
-            h2: 'Deployed Application',
-            content: `[${capFirstLetters(title)}](${section.link})`
-        })
-    }
-
-    if (section.questions) {
-        sectionArr.push({
+        {
             h2: 'Questions',
-            content: `If you have any questions about the repo, please open an issue or contact me at ${section.questions}. You can find more of my work at [${section.github}](https://github.com/${section.github}/).`
-        })
-    }
-
-    if (creditsSection(section.credits)) {
-        sectionArr.push ({
+            content: `If you have any questions about the repo, please open an issue or contact me via ${data.questions}. You can find more of my work at [${data.github}](https://github.com/${data.github}/).`
+        },
+        {
             h2: 'Credits',
-            content: creditsSection(section.credits)
-        })
-    }
+            content: addCredits(data.credits)
+        }
+    ]
 
     sectionArr.forEach(sectionItem => {
         if (sectionItem.content) {
@@ -108,24 +120,10 @@ ${sectionItem.content}
         }
     })
 
-    return readmeContents;
-}
+    // add license badge!
+    return `# ${capFirstLetters(data.title)}
 
-// function to generate markdown for README
-function generateMarkdown(data) {
-
-    const { title, description, contents, ...section } = data;
-
-    return `# ${capFirstLetters(title)}
-
-## Description
-${description}
-
-## Contents
-${createTableOfContents(contents)}
-${populateContents(title, section)}
-
-`;
-}
+${readmeContents}`;
+};
 
 module.exports = generateMarkdown;
