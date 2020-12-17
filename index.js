@@ -59,7 +59,44 @@ const questions = [
         type: 'checkbox',
         name: 'contents',
         message: 'Which sections would you like to include in your README?',
-        choices: ['Deployed Application', 'Installation', 'Usage', 'Screenshots', 'License', 'Contributing', 'Tests', 'Questions', 'Credits']
+        choices: [
+            {
+                name: 'Deployed Application',
+                checked: false
+            },
+            {
+                name: 'Installation',
+                checked: false
+            },
+            {
+                name: 'Usage',
+                checked: true
+            },
+            {
+                name: 'Screenshots',
+                checked: true
+            },
+            {
+                name: 'License',
+                checked: false
+            },
+            {
+                name: 'Contributing',
+                checked: false
+            },
+            {
+                name: 'Tests',
+                checked: false
+            },
+            {
+                name: 'Questions',
+                checked: true
+            },
+            {
+                name: 'Credits',
+                checked: true
+            },
+        ]
     },
     {
         type: 'input',
@@ -104,14 +141,7 @@ const questions = [
     {
         type: 'input',
         name: 'usage',
-        message: 'Please provide information for using your application.',
-        when: ({ contents }) => {
-            if (contents.indexOf('Usage') > -1) {
-                return true;
-            } else { 
-                return false;
-            }
-        },
+        message: 'Please provide information for using your application. (Required)',
         validate: usageInput => {
             if (usageInput) {
                 return true;

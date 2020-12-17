@@ -120,15 +120,15 @@ function generateMarkdown(data) {
     const sectionArr = [
         {
             h2: "Description",
-            content: createDescription(data.title, data.description, data.link),
+            content: createDescription(data.title, data.description, data.link)
         },
         {
             h2: "Contents",
-            content: createTableOfContents(data.contents),
+            content: createTableOfContents(data.contents)
         },
         {
             h2: "Installation",
-            content: data.installation,
+            content: data.installation
         },
         {
             h2: "Usage",
@@ -136,7 +136,7 @@ function generateMarkdown(data) {
         },
         {
             h2: "License",
-            content: createLicense(data.license),
+            content: createLicense(data.license)
         },
         {
             h2: "Contributing", 
@@ -144,15 +144,15 @@ function generateMarkdown(data) {
         },
         {
             h2: "Tests",
-            content: data.tests,
+            content: data.tests
         },
         {
             h2: "Questions",
-            content: createQuestions(data.questions, data.github, data.repo),
+            content: createQuestions(data.questions, data.github, data.repo)
         },
         {
             h2: "Credits",
-            content: createCredits(data.credits),
+            content: createCredits(data.credits)
         },
     ];
 
@@ -176,6 +176,7 @@ ${sectionItem.content}
   }/${data.repo})](https://github.com/${data.github}/${
     data.repo
   }/graphs/contributors) ${addLicenseBadge(data.license)}
+  
 ${readmeContents}`;
 }
 
