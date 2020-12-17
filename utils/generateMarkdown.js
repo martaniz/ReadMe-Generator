@@ -6,8 +6,18 @@ capFirstLetters = string => {
     .join(' ');
 };
 
+// creates license badge if license is chosen
+addBadge = license => {
+    if (license) {
+        return `![${license} License](https://img.shields.io/badge/license-${license.split(' ').join('%20')}-brightgreen)
+`
+    } else {
+        return '';
+    }
+}
+
 // creates description section
-addDescription = (title, description, link) => {
+createDescription = (title, description, link) => {
     if (link) {
         return `${description}
         
@@ -29,7 +39,7 @@ createTableOfContents = contentsArr => {
 };
 
 // creates screenshot section
-addScreenshot = screenshotItem => {
+createScreenshots = screenshotItem => {
     
     let allScreenshots = '';
     if (screenshotItem) {
@@ -49,7 +59,7 @@ ${allScreenshots}`;
 };
 
 // creates license section
-addLicense = license => {
+createLicense = license => {
     if (license) {
         return `This application is licensed under the ${license} license.`
     } else {
@@ -58,7 +68,7 @@ addLicense = license => {
 };
 
 // creates credits section
-addCredits = creditItem => {
+createCredits = creditItem => {
 
     let allCredits = '';
     if (creditItem) {
@@ -80,7 +90,7 @@ function generateMarkdown(data) {
     const sectionArr = [
         {
             h2: 'Description',
-            content: addDescription(data.title, data.description, data.link)
+            content: createDescription(data.title, data.description, data.link)
         },
         {
             h2: 'Installation',
@@ -88,11 +98,11 @@ function generateMarkdown(data) {
         },
         {
             h2: 'Usage',
-            content: `${data.usage} ${addScreenshot(data.screenshots)}`
+            content: `${data.usage} ${createScreenshots(data.screenshots)}`
         },
         {
             h2: 'License',
-            content: addLicense(data.license)
+            content: createLicense(data.license)
         },
         {   h2: 'Contributing',
             content: data.contributing
@@ -103,11 +113,11 @@ function generateMarkdown(data) {
         },
         {
             h2: 'Questions',
-            content: `If you have any questions about the repo, please open an issue or contact me via ${data.questions}. You can find more of my work at [${data.github}](https://github.com/${data.github}/).`
+            content: `If you have any questions about the repo, please open an issue or contact me via ${data.questions}. You can find more of my work on my [GitHub](https://github.com/${data.github}/).`
         },
         {
             h2: 'Credits',
-            content: addCredits(data.credits)
+            content: createCredits(data.credits)
         }
     ]
 
@@ -120,9 +130,8 @@ ${sectionItem.content}
         }
     })
 
-    // add license badge!
     return `# ${capFirstLetters(data.title)}
-
+${addBadge(data.license)}
 ${readmeContents}`;
 };
 
