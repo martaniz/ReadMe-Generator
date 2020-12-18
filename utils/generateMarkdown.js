@@ -3,7 +3,7 @@ const addLicenseBadge = license => {
     if (license) {
         return `![${license} License](https://img.shields.io/badge/license-${license
         .split(' ')
-        .join('%20')}-brightgreen)
+        .join('%20')}-blue)
 `;
     } else {
         return '';
@@ -43,6 +43,17 @@ const createTableOfContents = contentsArr => {
     });
     return contentsList;
 };
+
+const createInstallation = install => {
+    if (install) {
+        return `To use this application, please install: 
+\`\`\`
+${install}
+\`\`\``
+    } else {
+        return '';
+    }
+}
 
 // creates screenshot section
 const createScreenshots = screenshotItem => {
@@ -84,7 +95,7 @@ const createLicense = license => {
 // creates questions section
 const createQuestions = (email, github, repo) => {
     if (email) {
-        return `If you have any questions about the repo, please [open an issue](https://github.com/${github}/${repo}/issues) or contact me via ${email}. You can find more of my work on my GitHub, [${github}](https://github.com/${github}/).`
+        return `If you have any questions about the repo, please [open an issue](https://github.com/${github}/${repo}/issues) or contact me via email at ${email}. You can find more of my work on my GitHub, [${github}](https://github.com/${github}/).`
     } else {
         return '';
     }
@@ -119,7 +130,7 @@ function generateMarkdown(data) {
         },
         {
             h2: 'Installation',
-            content: data.installation
+            content: createInstallation(data.installation)
         },
         {
             h2: 'Usage',

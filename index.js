@@ -121,7 +121,7 @@ const questions = [
     {
         type: 'input',
         name: 'installation',
-        message: 'Please provide installation instructions.',
+        message: 'Please list any required packages for installation of your application.',
         when: ({ contents }) => {
             if (contents.indexOf('Installation') > -1) {
                 return true;
