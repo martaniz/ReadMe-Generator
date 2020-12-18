@@ -293,7 +293,15 @@ const creditQues = [
     {
         type: 'input',
         name: 'creditLink',
-        message: 'Please provide a link for the credit.  (Optional)',
+        message: 'Please provide a link for the credit.  (Required)',
+        validate: creditLink => {
+            if (creditLink) {
+                return true;
+            } else {
+                console.log('Please enter a name for the credit!');
+                return false;
+            }
+        }
     },
     {
         type: 'confirm',
