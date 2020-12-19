@@ -76,11 +76,7 @@ ${allScreenshots}`;
 
 // creates usage section
 const createUsage = (usage, screenshots) => {
-    if (usage) {
-        return `${usage} ${createScreenshots(screenshots)}`
-    } else {
-        return '';
-    }
+    return `${usage} ${createScreenshots(screenshots)}`
 }
 
 // creates license section
@@ -134,7 +130,7 @@ function generateMarkdown(data) {
         },
         {
             h2: 'Usage',
-            content: createUsage(data.usage, data.screenshot)
+            content: createUsage(data.usage, data.screenshots)
         },
         {
             h2: 'License',
