@@ -1,9 +1,7 @@
 // creates license badge if license is chosen
 const addLicenseBadge = license => {
     if (license) {
-        return `![${license} License](https://img.shields.io/badge/license-${license
-        .split(' ')
-        .join('%20')}-blue)
+        return `![${license} License](https://img.shields.io/badge/license-${license.split(' ').join('%20')}-blue)
 `;
     } else {
         return '';
@@ -23,21 +21,17 @@ View the deployed page at [${title}](${link}).`;
 
 // creates table of contents
 const createTableOfContents = contentsArr => {
-    // removes 'Deployed Application' from table of contents
-    const indexOfDeployedApp = contentsArr.indexOf('Deployed Application');
-    if (indexOfDeployedApp > -1) {
-        contentsArr.splice(indexOfDeployedApp, 1);
-    }
 
     // creates contents list items based on user selection
     let contentsList = '';
     contentsArr.forEach((item) => {
+
         // indents 'Screenshots' list item
-        if (item === 'Screenshots') {
-        contentsList += `   * [${item}](#${item})
+        if (item.content && item.h2 === 'Screenshots') {
+        contentsList += `   * [${item.h2}](#${item.h2})
 `;
-        } else {
-        contentsList += `* [${item}](#${item})
+        } else if (item.content) {
+            contentsList += `* [${item.h2}](#${item.h2})
 `;
         }
     });
@@ -53,7 +47,7 @@ ${install}
     } else {
         return '';
     }
-}
+};
 
 // creates screenshot section
 const createScreenshots = screenshotItem => {
@@ -65,10 +59,7 @@ ${shot.screenshotDesc}
 `;
     });
 
-    return `
-    
-### Screenshots
-${allScreenshots}`;
+    return `${allScreenshots}`;
     } else {
         return '';
     }
@@ -77,7 +68,7 @@ ${allScreenshots}`;
 // creates usage section
 const createUsage = (usage, screenshots) => {
     return `${usage} ${createScreenshots(screenshots)}`
-}
+};
 
 // creates license section
 const createLicense = license => {
@@ -95,7 +86,7 @@ const createQuestions = (email, github, repo) => {
     } else {
         return '';
     }
-}
+};
 
 // creates credits section
 const createCredits = creditItem => {
@@ -114,27 +105,24 @@ const createCredits = creditItem => {
 
 // function to generate markdown for README
 function generateMarkdown(data) {
+    const { title, github, repo, license } = data;
     let readmeContents = '';
     const sectionArr = [
-        {
-            h2: 'Description',
-            content: createDescription(data.title, data.description, data.link)
-        },
-        {
-            h2: 'Contents',
-            content: createTableOfContents(data.contents)
-        },
         {
             h2: 'Installation',
             content: createInstallation(data.installation)
         },
         {
             h2: 'Usage',
-            content: createUsage(data.usage, data.screenshots)
+            content: createUsage(data.usage)
+        },
+        {
+            h2: 'Screenshots',
+            content: createScreenshots(data.screenshots)
         },
         {
             h2: 'License',
-            content: createLicense(data.license)
+            content: createLicense(license)
         },
         {
             h2: 'Contributing', 
@@ -146,7 +134,7 @@ function generateMarkdown(data) {
         },
         {
             h2: 'Questions',
-            content: createQuestions(data.questions, data.github, data.repo)
+            content: createQuestions(data.questions, github, repo)
         },
         {
             h2: 'Credits',
@@ -156,7 +144,12 @@ function generateMarkdown(data) {
 
     // adds each README section if contents for the section exists
     sectionArr.forEach((sectionItem) => {
-        if (sectionItem.content) {
+        if (sectionItem.content && sectionItem.h2 === 'Screenshots') {
+            readmeContents += `### ${sectionItem.h2}
+${sectionItem.content}
+
+`
+        } else if (sectionItem.content) {
         readmeContents += `## ${sectionItem.h2}
 ${sectionItem.content}
     
@@ -164,17 +157,23 @@ ${sectionItem.content}
         }
     });
 
-    return `# ${data.title}
-[![Issues](https://img.shields.io/github/issues/${data.github}/${
-    data.repo
-  })](https://github.com/${data.github}/${
-    data.repo
+    return `# ${title}
+[![Issues](https://img.shields.io/github/issues/${github}/${
+    repo
+  })](https://github.com/${github}/${
+    repo
   }/issues) [![Issues](https://img.shields.io/github/contributors/${
-    data.github
-  }/${data.repo})](https://github.com/${data.github}/${
-    data.repo
-  }/graphs/contributors) ${addLicenseBadge(data.license)}
-  
+    github
+  }/${repo})](https://github.com/${github}/${
+    repo
+  }/graphs/contributors) ${addLicenseBadge(license)}
+
+## Description
+${createDescription(title, data.description, data.link)}
+
+## Contents
+${createTableOfContents(sectionArr)}
+
 ${readmeContents}`;
 }
 
