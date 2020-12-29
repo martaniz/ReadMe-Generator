@@ -204,7 +204,7 @@ const questions = [
             if (testsInput) {
                 return true;
             } else {
-                console.log('Please enter test information for your application!');
+                console.log('What packages are required to run tests for your application?');
                 return false;
             }
         }
@@ -341,7 +341,7 @@ addCredits = readmeInfo => {
     // initiates array for credits
     if (!readmeInfo.credits) {
         readmeInfo.credits = [];
-    }
+    };
 
     console.log(`
 ==============
@@ -361,8 +361,8 @@ Add New Credit
         } else {
             return readmeInfo;
         }
-    })
-}
+    });
+};
 
 // function to write README file
 function writeToFile(fileName, data) {
@@ -371,13 +371,13 @@ function writeToFile(fileName, data) {
             throw err
         };
         console.log('README created!')
-    })
-}
+    });
+};
 
 // function to initialize program
 function init() {
     return inquirer.prompt(questions);
-}
+};
 
 // function call to initialize program
 init()

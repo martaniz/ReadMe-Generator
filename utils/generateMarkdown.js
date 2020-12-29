@@ -38,6 +38,7 @@ const createTableOfContents = contentsArr => {
     return contentsList;
 };
 
+// creates installation section
 const createInstallation = install => {
     if (install) {
         return `To use this application, please install: 
@@ -77,6 +78,18 @@ const createLicense = license => {
     } else {
         return '';
     }
+};
+
+const createTest = test => {
+    if (test) {
+        return `To run tests on the application, install
+\`\`\`
+${test}
+\`\`\`
+and run \`npm run test\` from the command line.`
+    } else {
+        return '';
+    };
 };
 
 // creates questions section
@@ -130,7 +143,7 @@ function generateMarkdown(data) {
         },
         {
             h2: 'Tests',
-            content: data.tests
+            content: createTest(data.tests)
         },
         {
             h2: 'Questions',
