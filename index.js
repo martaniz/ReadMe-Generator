@@ -86,6 +86,10 @@ const questions = [
                 checked: true
             },
             {
+                name: 'Built With',
+                checked: true
+            },
+            {
                 name: 'License',
                 checked: false
             },
@@ -165,6 +169,20 @@ const questions = [
                 return true;
             } else {
                 console.log('Please provide license information!');
+                return false;
+            }
+        }
+    }, 
+    {
+        type: 'checkbox',
+        name: 'built with',
+        message: 'Please select the technologies that your application was built with.',
+        choices: ['HTML', 'CSS', 'SASS', 'JavaScript', 'Node.js', 'Express.js'],
+        default: 0,
+        when: ({ contents }) => {
+            if (contents.indexOf('Built With') > -1) {
+                return true;
+            } else {
                 return false;
             }
         }

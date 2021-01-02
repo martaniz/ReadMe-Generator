@@ -27,11 +27,11 @@ const createTableOfContents = contentsArr => {
     contentsArr.forEach((item) => {
 
         // indents 'Screenshots' list item
-        if (item.content && item.h2 === 'Screenshots') {
-        contentsList += `   * [${item.h2}](#${item.h2})
+        if (item.content && item.header === 'Screenshots') {
+        contentsList += `   * [${item.header}](#${(item.header).toLowerCase()})
 `;
         } else if (item.content) {
-            contentsList += `* [${item.h2}](#${item.h2})
+            contentsList += `* [${item.header}](#${(item.header).toLowerCase().split(' ').join('-')})
 `;
         }
     });
@@ -54,7 +54,7 @@ ${install}
 const createScreenshots = screenshotItem => {
     let allScreenshots = '';
     if (screenshotItem) {
-        screenshotItem.forEach((shot) => {
+        screenshotItem.forEach(shot => {
         allScreenshots += `![${shot.screenshotAlt}](${shot.screenshotLink})
 ${shot.screenshotDesc}
 `;
@@ -64,6 +64,21 @@ ${shot.screenshotDesc}
     } else {
         return '';
     }
+};
+
+// creates built with section
+const createBuiltWith = builtWith =>{
+    let allTechnologies = '';
+
+    if (builtWith) {
+        builtWith.forEach(item => {
+            allTechnologies += `
+* ${item}`
+        });
+        return `${allTechnologies}`;
+    } else {
+        return '';
+    };
 };
 
 // creates usage section
@@ -122,48 +137,52 @@ function generateMarkdown(data) {
     let readmeContents = '';
     const sectionArr = [
         {
-            h2: 'Installation',
+            header: 'Installation',
             content: createInstallation(data.installation)
         },
         {
-            h2: 'Usage',
+            header: 'Usage',
             content: createUsage(data.usage)
         },
         {
-            h2: 'Screenshots',
+            header: 'Screenshots',
             content: createScreenshots(data.screenshots)
         },
         {
-            h2: 'License',
+            header: 'Built With',
+            content: createBuiltWith(data['built with'])
+        },
+        {
+            header: 'License',
             content: createLicense(license)
         },
         {
-            h2: 'Contributing', 
+            header: 'Contributing', 
             content: data.contributing 
         },
         {
-            h2: 'Tests',
+            header: 'Tests',
             content: createTest(data.tests)
         },
         {
-            h2: 'Questions',
+            header: 'Questions',
             content: createQuestions(data.questions, github, repo)
         },
         {
-            h2: 'Credits',
+            header: 'Credits',
             content: createCredits(data.credits)
         },
     ];
 
     // adds each README section if contents for the section exists
     sectionArr.forEach((sectionItem) => {
-        if (sectionItem.content && sectionItem.h2 === 'Screenshots') {
-            readmeContents += `### ${sectionItem.h2}
+        if (sectionItem.content && sectionItem.header === 'Screenshots') {
+            readmeContents += `### ${sectionItem.header}
 ${sectionItem.content}
 
 `
         } else if (sectionItem.content) {
-        readmeContents += `## ${sectionItem.h2}
+        readmeContents += `## ${sectionItem.header}
 ${sectionItem.content}
     
 `;
